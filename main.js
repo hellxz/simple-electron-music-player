@@ -1,22 +1,36 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
-app.on('ready', () => {
-  const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: true
-    }
-  })
-  mainWindow.loadFile('./renderer/index.html')
-  ipcMain.addListener('add-music', (event)=>{
-    const addMusicWindow = new BrowserWindow({
-      width: 500,
-      height: 400,
+
+//窗口类写法
+class AppWindow extends BrowserWindow{
+  constructor(config, loadFilePath){
+    const basicConfig = {
+      width: 800,
+      height: 600,
       webPreferences: {
         nodeIntegration: true
-      },
-      parent: mainWindow
+      }
+    }
+    //合并配置类，basicConfig中同名的项会被config所替代
+    // const finalConfig = Object.assign(basicConfig, config)
+    //以上写法等同
+    const finalConfig = {...basicConfig, ...config}
+    super(finalConfig)
+    this.loadFile(loadFilePath)
+
+    //减少加载闪烁
+    this.once('ready-to-show', () => {
+      this.show()
     })
-    addMusicWindow.loadFile('./renderer/add-music.html')
+  }
+}
+
+app.on('ready', () => {
+  const mainWindow = new AppWindow({},'./renderer/index.html')
+  ipcMain.addListener('add-music', (event)=>{
+    const addMusicWindow = new AppWindow({
+      width: 500,
+      height: 400,
+      parent: mainWindow
+    },'./renderer/add-music.html')
   })
 })
