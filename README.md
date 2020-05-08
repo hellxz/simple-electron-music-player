@@ -1,6 +1,8 @@
 # 仓库说明
 本仓库为学习electron桌面app的笔记，源自慕课网electron开发桌面音乐播放器的课程
 
+主要目的是通过这个课程来更好的为自己开发一个小桌面程序
+
 使用electron-quick-start项目作为基础（改得只剩下package.json变化不大 :smile: ）
 
 ## 分支说明
