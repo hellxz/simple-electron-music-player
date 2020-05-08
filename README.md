@@ -5,4 +5,5 @@
 
 ## 分支说明
 - [x] master: 初始化说明electron，使用BrowserWindow创建两个窗口，启动时同时创建
+- [x] 
 
