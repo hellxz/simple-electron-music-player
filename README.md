@@ -13,3 +13,8 @@
 
 ... to be continue
 
+## 使用方式
+```bash
+yarn start
+```
+
