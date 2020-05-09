@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 
 //窗口类写法
 class AppWindow extends BrowserWindow{
@@ -26,11 +26,24 @@ class AppWindow extends BrowserWindow{
 
 app.on('ready', () => {
   const mainWindow = new AppWindow({},'./renderer/index.html')
-  ipcMain.addListener('add-music', (event)=>{
+  ipcMain.on('add-music', (event)=>{
     const addMusicWindow = new AppWindow({
       width: 500,
       height: 400,
       parent: mainWindow
     },'./renderer/add-music.html')
+  })
+  ipcMain.on('select-music-files', (event) => {
+    dialog.showOpenDialog({
+      properties: ['openFile', 'multiSelections'],
+      filters: [{ name: 'Music', extensions: ['mp3'] }]
+    }).then(result => {
+      if(result.filePaths){
+        // console.log(result.filePaths)
+        event.sender.send('selected-files', result.filePaths)
+      }
+    }).catch(err => {
+      console.log(err)
+    })
   })
 })
