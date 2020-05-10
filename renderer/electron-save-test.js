@@ -19,4 +19,5 @@ const DataSave = require('./data-store')
 const testSave = new DataSave()
 const array = ['111','222']
 testSave.addTracks(array)
+//数据默认存储在app.getPath('userData')目录下的config.json中，如果指定DataSave(Store)的name，则在name.json中
 console.log(testSave.getTracks())

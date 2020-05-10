@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>本地播放器</title>
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free/css/all.css">
 </head>
 <body>
     <div class="container mt-4">
@@ -11,6 +12,8 @@
         <button type="button" id="add-music-btn" class="btn btn-primary btn-lg btn-block mt-4">
             添加音乐到播放列表
         </button>
+        <div id="track-list" class="mt-4">
+        </div>
     </div>
     <script>
         require('./index.js')
