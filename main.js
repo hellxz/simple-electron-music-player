@@ -26,7 +26,7 @@ class AppWindow extends BrowserWindow{
 
 app.on('ready', () => {
   const mainWindow = new AppWindow({},'./renderer/index.html')
-  ipcMain.on('add-music', (event)=>{
+  ipcMain.on('add-music', ()=>{
     const addMusicWindow = new AppWindow({
       width: 500,
       height: 400,
@@ -39,11 +39,13 @@ app.on('ready', () => {
       filters: [{ name: 'Music', extensions: ['mp3'] }]
     }).then(result => {
       if(result.filePaths){
-        // console.log(result.filePaths)
         event.sender.send('selected-files', result.filePaths)
       }
     }).catch(err => {
       console.log(err)
     })
+  })
+  ipcMain.on('add-music-files', (event, filePaths) => {
+    console.log(filePaths)
   })
 })
