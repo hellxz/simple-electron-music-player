@@ -1,7 +1,5 @@
 const { ipcRenderer } = require('electron')
 const { $ } = require('./helper')
-const DataStore = require('./data-store')
-const myStore = new DataStore({'name': 'MusicData'})
 
 let musicAudio = new Audio()
 let allMusicTracks
@@ -26,6 +24,10 @@ $('track-list').addEventListener('click', (event) => {
             //当初次播放或本次点击与当前播放不同id时，替换音频文件
             currentMusicTrack = clickTrack
             musicAudio.src = currentMusicTrack.path
+            const currentPlay = document.querySelector('.fa-pause')
+            if(currentPlay){
+                currentPlay.classList.replace('fa-pause', 'fa-play')
+            }
         }
         musicAudio.play()
         classList.replace('fa-play', 'fa-pause')
@@ -35,17 +37,12 @@ $('track-list').addEventListener('click', (event) => {
         musicAudio.pause()
         classList.replace('fa-pause', 'fa-play')
     }else if(id && classList.contains('fa-trash-alt')){
-        //点垃圾筒
-        // myStore.removeTrackById(id)
-        // if(currentMusicTrack && currentMusicTrack.id === id){
-        //     musicAudio.pause
-        //     musicAudio.src = ''
-        //     currentMusicTrack = null
-        // }
-        // allMusicTracks.splice(allMusicTracks.findIndex(item => item.id === id), 1)
-        //TODO 删除dom
-        console.log($(`'.${id}'`))
-
+        //删除按钮，向主进程发送事件
+        if(currentMusicTrack && currentMusicTrack.id === id){
+            musicAudio.pause
+            musicAudio.src = ''
+        }
+        ipcRenderer.send('deleteMusic', id)
     }
 })
 
@@ -57,13 +54,13 @@ const rendererHtml = (tracks) => {
         2.通过data-set设置自定义参数，便于js获取
         3.事件冒泡机制，当多层容器中产生事件，会向上传递，直到html才进行处理，因此，可以将事件绑定在父容器上，以减少重复绑定事件
         */
-        html += `<li class="row music-track list-group-item d-flex justify-content-between align-items-center ${track.id}">
+        html += `<li class="row music-track list-group-item d-flex justify-content-between align-items-center">
             <div class="col-10">
                 <i class="fas fa-music mr-2 text-secondary"></i>
                 <b>${track.fileName}</b>
             </div>
             <div class="col-2">
-                <i class="fas fa-play mr-4" data-id="${track.id}"></i>
+                <i class="fas fa-play mr-5" data-id="${track.id}"></i>
                 <i class="fas fa-trash-alt" data-id="${track.id}"></i>
             </div>
         </li>`
@@ -76,7 +73,5 @@ const rendererHtml = (tracks) => {
 ipcRenderer.on('update-tracks', (event, tracks) => {
     rendererHtml(tracks)
     allMusicTracks = tracks
-    console.log('index.js-tracks:'+tracks)
-    console.log('index.js-allMusicTracks:', allMusicTracks)
 })
 

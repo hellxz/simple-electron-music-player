@@ -36,13 +36,11 @@ class DataStore extends Store {
         this.tracks = [...this.tracks, ...tracksWithPops]
         return this.saveTracks()
     }
-    removeTrack(delTrack){
-        this.tracks.splice(this.tracks.findIndex(item => item.id === delTrack.id), 1)
-        this.saveTracks()
-    }
-    removeTrackById(id){
-        this.tracks.splice(this.tracks.findIndex(item => item.id === id), 1)
-        this.saveTracks()
+    removeTrack(id){
+        // 数组去除指定对象的两种写法
+        // this.tracks.splice(this.tracks.findIndex(item => item.id === id), 1)
+        this.tracks = this.tracks.filter(track => track.id != id)
+        return this.saveTracks()
     }
 }
 

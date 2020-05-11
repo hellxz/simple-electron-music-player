@@ -1,3 +1,4 @@
 #track-list .col-2 .fas:hover{
     cursor: pointer;
+    color: red;
 }

@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const DataStore = require('./renderer/data-store')
 let myStore = new DataStore({'name':'MusicData'})
+let addMusicWindow
 
 //窗口类写法
 class AppWindow extends BrowserWindow{
@@ -35,7 +36,7 @@ app.on('ready', () => {
   })
   //添加音乐按钮点击事件
   ipcMain.on('add-music-btn', ()=>{
-    const addMusicWindow = new AppWindow({
+    addMusicWindow = new AppWindow({
       width: 500,
       height: 400,
       parent: mainWindow
@@ -60,6 +61,13 @@ app.on('ready', () => {
     const updateMusicTrack = myStore.addTracks(filePaths).getTracks()
     //通知主窗口更新界面
     mainWindow.send('update-tracks', updateMusicTrack)
+    //关闭添加音乐窗口
+    addMusicWindow.close()
+  })
+  //删除音乐功能
+  ipcMain.on('deleteMusic', (event, id) => {
+    const updatedTracks = myStore.removeTrack(id).getTracks()
+    mainWindow.send('update-tracks', updatedTracks)
   })
   //查看electron-store将数据持久化的位置，Linux系统在 ~/.config/应用名/ 下
   // console.log(app.getPath('userData'))
