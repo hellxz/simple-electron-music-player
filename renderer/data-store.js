@@ -29,11 +29,20 @@ class DataStore extends Store {
             //获取当前音乐文件路径，以检查是否添加重复，filter块中返回false则不添加到新数组里
             const currentTracks = this.getTracks().map(track => track.path)
             //es6的includes，返回布尔值，无法获得下标，需要下标使用indexOf
+            console.log('当前音乐是否要更新:'+!currentTracks.includes(track.path))
             return !currentTracks.includes(track.path)
         })
         //合并数组
         this.tracks = [...this.tracks, ...tracksWithPops]
         return this.saveTracks()
+    }
+    removeTrack(delTrack){
+        this.tracks.splice(this.tracks.findIndex(item => item.id === delTrack.id), 1)
+        this.saveTracks()
+    }
+    removeTrackById(id){
+        this.tracks.splice(this.tracks.findIndex(item => item.id === id), 1)
+        this.saveTracks()
     }
 }
 

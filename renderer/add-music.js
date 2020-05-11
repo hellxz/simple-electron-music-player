@@ -2,16 +2,19 @@ const { ipcRenderer } = require('electron')
 const path = require('path')
 //引入helper.js中定义的$
 const { $ } = require('./helper')
-let musicFiles = []
+let musicFiles
 
 //选择音乐按钮点击发送消息给main进程打开文件选择框
-$('select-music').addEventListener('click', () => {
+$('select-music-btn').addEventListener('click', () => {
+    console.log('选择音乐文件前，musicFiles的值：'+musicFiles)
     ipcRenderer.send('select-music-files')
 })
-
-$('add-music').addEventListener('click', () => {
-    if(this.musicFiles){
-        ipcRenderer.send('add-music-files', this.musicFiles)
+//导入音乐
+$('add-music-btn').addEventListener('click', () => {
+    if(musicFiles){
+        console.log('导入音乐触发后musicFiles:'+musicFiles)
+        ipcRenderer.send('main-window-add-music', musicFiles)
+        musicFiles = null
     }
 })
 
@@ -26,7 +29,7 @@ const rendererInnerHtml = (pathes) =>{
 
 //接收main进程返回的文件列表数据，并进行处理
 ipcRenderer.on('selected-files',(event, files) =>{
-    this.musicFiles = files
-    // console.log(files) //console.log打印到add-music.html窗口console中，使用ctrl+shift+i查看
+    musicFiles = files
+    console.log('add-music.js-selected-files:'+files) //console.log打印到add-music.html窗口console中，使用ctrl+shift+i查看
     rendererInnerHtml(files)
 })

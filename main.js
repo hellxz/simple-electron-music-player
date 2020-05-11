@@ -34,7 +34,7 @@ app.on('ready', () => {
     mainWindow.send('update-tracks' , myStore.getTracks())
   })
   //添加音乐按钮点击事件
-  ipcMain.on('add-music', ()=>{
+  ipcMain.on('add-music-btn', ()=>{
     const addMusicWindow = new AppWindow({
       width: 500,
       height: 400,
@@ -55,12 +55,12 @@ app.on('ready', () => {
     })
   })
   //添加音乐文件到主窗口列表事件
-  ipcMain.on('add-music-files', (event, filePaths) => {
+  ipcMain.on('main-window-add-music', (event, filePaths) => {
     //保存数据
-    const updateMusicTrack = myStore.addTracks(filePaths).saveTracks().getTracks()
-    // console.log(updateMusicTrack)
+    const updateMusicTrack = myStore.addTracks(filePaths).getTracks()
+    //通知主窗口更新界面
     mainWindow.send('update-tracks', updateMusicTrack)
   })
   //查看electron-store将数据持久化的位置，Linux系统在 ~/.config/应用名/ 下
-  console.log(app.getPath('userData'))
+  // console.log(app.getPath('userData'))
 })
